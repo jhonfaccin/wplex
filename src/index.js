@@ -2,12 +2,16 @@ const { program } = require('commander');
 const { csvProcessor } = require("./csvProcessor");
 const geolib = require('geolib');
 
-program
+const init = async () => {
+    program
     .requiredOption('--location <location>', 'Location to search for (format: latitude,longitude)')
     .requiredOption('--file <file>', 'Path to the CSV file')
     .parse(process.argv);
+};
 
-const filterEventsByRadius = (event) => {
+const inputParams = {};
+
+const filterEventsByDistance = (event) => {
     if (!event || !event.payload) {
         return false;
     }
@@ -15,19 +19,22 @@ const filterEventsByRadius = (event) => {
     let coordenate = {};
     coordenate.latitude = parseFloat(parts[2]);
     coordenate.longitude = parseFloat(parts[3].replace('<', ''));
-    const distance = geolib.getPreciseDistance(referenceCoordinate, coordenate, 0.01);
+    const distance = geolib.getPreciseDistance(inputParams.referenceCoordinate, coordenate, 0.01);
     return distance < 50;
 }
 
 const main = async () => {
-    referenceCoordinate = { latitude: parseFloat("-23.70041"), longitude: parseFloat("-046.53713") };
+    await init();
+    inputParams.referenceCoordinate = program.getOptionValue("location");
+    const parts = inputParams.referenceCoordinate.split(',');
+    inputParams.referenceCoordinate =  { latitude: parseFloat(parts[0]), longitude: parseFloat(parts[1]) };
+    inputParams.file = program.getOptionValue("file");
     let dataCSV = [];
     try {
-        dataCSV = await csvProcessor.readFile("eventlog.csv", filterEventsByRadius);
+        dataCSV = await csvProcessor.readFile(inputParams.file, filterEventsByDistance);
     } catch (error) {
         console.log(error);
     }
-    // const filteredData = filterEventsByRadius(dataCSV);
     const header = [
         { id: 'device', title: 'Device' },
         { id: 'prfix', title: 'Prefix' },
