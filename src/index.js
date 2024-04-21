@@ -1,5 +1,11 @@
+const { program } = require('commander');
 const { csvProcessor } = require("./csvProcessor");
 const geolib = require('geolib');
+
+program
+    .requiredOption('--location <location>', 'Location to search for (format: latitude,longitude)')
+    .requiredOption('--file <file>', 'Path to the CSV file')
+    .parse(process.argv);
 
 const filterEventsByRadius = (event) => {
     if (!event || !event.payload) {
