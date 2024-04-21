@@ -22,14 +22,13 @@ const main = async () => {
         console.log(error);
     }
     // const filteredData = filterEventsByRadius(dataCSV);
-
     const header = [
         { id: 'device', title: 'Device' },
         { id: 'prfix', title: 'Prefix' },
         { id: 'instant', title: 'Instant' },
         { id: 'payload', title: 'Payload' },
         { id: 'company', title: 'Company' }]
-    console.log(dataCSV)
+    await csvProcessor.createFileCSV(dataCSV, header);
 };
 
 main();
