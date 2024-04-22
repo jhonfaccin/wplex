@@ -23,7 +23,14 @@ const readFile = async (file,filterFunction) => {
     });
 }
 
+
 const createFileCSV = async (data, header) => {
+    data.sort((a, b) => {
+        if (a.device === b.device) {
+            return new Date(b.instant) - new Date(a.instant);
+        }
+        return a.device.localeCompare(b.device);
+    });
     const writer = csvWriter({
         path: 'output.csv',
         header: header
