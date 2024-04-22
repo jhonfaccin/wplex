@@ -1,0 +1,22 @@
+# Projeto
+
+Teste técnico WPLEX
+
+### Intalation
+```
+git clone git@github.com:jhonfaccin/wplex.git
+npm install
+```
+
+### Execution
+```
+ node src/index.js --location <location> --file <file>
+ ```
+exemplo:
+``` 
+node src/index.js --location="-23.70041,-46.53713" 
+```
+or:
+```
+node src/index.js --location="-23.70041,-46.53713" --file="path/eventlog.csv"
+```
