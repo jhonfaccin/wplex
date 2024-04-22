@@ -2,15 +2,15 @@ const csv = require('csv-parser');
 const csvWriter = require('csv-writer').createObjectCsvWriter;
 const fs = require('fs');
 
-const readFile = async (file,filterFunction) => {
+const readFile = async (file, filterFunction) => {
     return new Promise((resolve, reject) => {
         const dataCSV = [];
-        fs.createReadStream(file)
-            .pipe(csv())
+        const readStream = fs.createReadStream(file);
+        readStream.pipe(csv())
             .on('data', (data) => {
                 if (filterFunction && filterFunction(data)) {
                     dataCSV.push(data);
-                } else if (filterFunction === undefined){
+                } else if (filterFunction === undefined) {
                     dataCSV.push(data);
                 }
             })
@@ -20,6 +20,9 @@ const readFile = async (file,filterFunction) => {
             .on('error', (error) => {
                 reject(error);
             });
+        readStream.on('error', (error) => {
+            reject(error);
+        });
     });
 }
 
@@ -36,7 +39,7 @@ const createFileCSV = async (data, header) => {
     });
     const writeStream = fs.createWriteStream('output.csv');
 
-    writer.writeRecords(data) 
+    writer.writeRecords(data)
         .then(() => {
             console.log('CSV file created successfully');
         })
