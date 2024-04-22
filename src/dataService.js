@@ -11,7 +11,7 @@ const getLocationData = async (location, file) => {
     try {
         dataCSV = await csvProcessor.readFile(file, filterFunction);
     } catch (error) {
-        throw Error('Error reading CSV:', error);
+        throw Error('Error reading CSV:', error.message);
     }
     return dataCSV;
 }
