@@ -23,11 +23,10 @@ const readFile = async (file,filterFunction) => {
     });
 }
 
-
 const createFileCSV = async (data, header) => {
     data.sort((a, b) => {
         if (a.device === b.device) {
-            return new Date(b.instant) - new Date(a.instant);
+            return new Date(a.instant) - new Date(b.instant)
         }
         return a.device.localeCompare(b.device);
     });
@@ -45,7 +44,6 @@ const createFileCSV = async (data, header) => {
             throw Error('Error writing CSV:', err);
         });
     writeStream.end();
-
 }
 
 module.exports = {
